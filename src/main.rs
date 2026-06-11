@@ -2,7 +2,7 @@ use reqwest::Client;
 use ratatui_plt::{heatmap_widget, prelude::*};
 use ratatui::{Frame, GridData};
 use chrono::prelude::*;
-async pub fn spans_data(username:&str) {
+async rupub fn spans_data(username:&str) {
     let client = reqwest::Client::new();
     let request = client.get("https://hackatime.hackclub.com/api/v1/users/{username}/heartbeats/spans");
     let response = request.send().await?;
