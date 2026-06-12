@@ -1,7 +1,12 @@
 [package]
 name = "HackatimeTUI"
 version = "0.0.1" 
+edition = "2021"
 [dependencies]
+chrono = "0.4.45"
+color-eyre = "0.6.5"
+crossterm = "0.29.0"
+ploot = "0.1.5"
 ratatui = "0.30.1"
 ratatui-plt = "0.0.2"
 reqwest = "0.13.4"
