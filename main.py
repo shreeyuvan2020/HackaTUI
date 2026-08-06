@@ -18,23 +18,34 @@ class ActivityApp(App[None]):
         payload = {'start_date': start_date.isoformat(), 'end_date': end_date.isoformat()}
         url = f"https://hackatime.hackclub.com/api/v1/users/{username}/heartbeats/spans"
         response = requests.get(url, params=payload)
-    def hackatime_day(self, data, day):
-        
+        response = response.json()
+        some_stuff = {}
+        for i in response["spans"]:
+            date = datetime.fromtimestamp(i["start_time"]).date()
+            if date not in some_stuff:
+                some_stuff[date] = i["duration"]
+            else:
+                some_stuff[date] += i["duration"]
+        return some_stuff
     def retrieve_data(self, year: int) -> ActivityHeatmap.ActivityData:
         # So like we setting the data ig? basically give value for every day of year(adding COLOR)
         template = ActivityHeatmap.generate_empty_activity(year)
-        data = defaultdict(lambda: defaultdict(int))
+        data: ActivityHeatmap.ActivityData = defaultdict(float)
         more_data = self.get_hackatime_year(year, "shn")
         for week in template:
             for day in week:
-                
+                if day is not None:
+                    if day in more_data:
+                        data[day] = float(more_data[day])
+                    else:
+                        data[day] = 0.0
+        return data
 
     def set_heatmap_data(self, year: int) -> None:
         """Sets the data based on the current data."""
         self.query_one(ActivityHeatmap).values = self.retrieve_data(year)
 
     def _on_mount(self) -> None:
-        self.get_hackatime_day_heatmap("bleh")
         self.set_heatmap_data(2025)
 
     def compose(self) -> ComposeResult:

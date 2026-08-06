@@ -15,11 +15,21 @@ class ActivityApp(App[None]):
 
     def retrieve_data(self, year: int) -> ActivityHeatmap.ActivityData:
         """Placeholder example on how the data could be generated."""
+        random.seed(year)
         template = ActivityHeatmap.generate_empty_activity(year)
+        print(defaultdict(
+            lambda: 0,
+            {
+                day: random.randint(6000, 20000)
+                for week in template
+                for day in week
+                if day
+            },
+        ))
         return defaultdict(
             lambda: 0,
             {
-                day: random.randint(6000, 30000)
+                day: random.randint(6000, 20000)
                 for week in template
                 for day in week
                 if day
